@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".AddDeviceActivity"
+    android:background="@color/colorPrimary">
+
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:text="@string/back"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_device_btn"
+        app:layout_constraintVertical_bias="0.13999999" />
+
+    <Button
+        android:id="@+id/add_device_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:text="@string/proceed"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_wifi"
+        app:layout_constraintVertical_bias="0.35000002" />
+
+    <ImageView
+        android:id="@+id/dev_img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.25"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_cloud_red" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ssid_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dev_img"
+        app:layout_constraintWidth_percent="0.75">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/ssid"
+            android:textColor="@android:color/white" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/password_wifi"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ssid_input"
+        app:layout_constraintWidth_percent="0.75">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:textColor="@android:color/white" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/dev_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:ems="3"
+        android:text="@string/id"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/dev_type"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/dev_img"
+        app:layout_constraintTop_toTopOf="@+id/dev_img"
+        app:layout_constraintVertical_bias="0.00999999" />
+
+    <TextView
+        android:id="@+id/dev_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Type"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/dev_model"
+        app:layout_constraintEnd_toEndOf="@+id/dev_id"
+        app:layout_constraintStart_toStartOf="@+id/dev_id"
+        app:layout_constraintTop_toBottomOf="@+id/dev_id" />
+
+    <TextView
+        android:id="@+id/dev_model"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/model"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/dev_img"
+        app:layout_constraintEnd_toEndOf="@+id/dev_type"
+        app:layout_constraintStart_toStartOf="@+id/dev_type"
+        app:layout_constraintTop_toBottomOf="@+id/dev_type" />
+
+    <TextView
+        android:id="@+id/dev_id_v"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:textColor="@android:color/white"
+        android:text="@string/unknown"
+        app:layout_constraintBottom_toBottomOf="@+id/dev_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dev_id"
+        app:layout_constraintTop_toTopOf="@+id/dev_id" />
+
+    <TextView
+        android:id="@+id/dev_type_v"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:textColor="@android:color/white"
+        android:text="@string/unknown"
+        app:layout_constraintBottom_toBottomOf="@+id/dev_type"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dev_type"
+        app:layout_constraintTop_toTopOf="@+id/dev_type" />
+
+    <TextView
+        android:id="@+id/dev_model_v"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:textColor="@android:color/white"
+        android:text="@string/unknown"
+        app:layout_constraintBottom_toBottomOf="@+id/dev_model"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dev_model"
+        app:layout_constraintTop_toTopOf="@+id/dev_model" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
