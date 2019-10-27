@@ -11,8 +11,10 @@ import com.google.android.material.snackbar.Snackbar;
 
 import android.os.IBinder;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -20,8 +22,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.sm.homeautomation.data.model.User;
 import com.sm.homeautomation.mqtt.MqttManager;
 import com.sm.homeautomation.mqtt.MqttManagerService;
+import com.sm.homeautomation.ui.login.LoginActivity;
+import com.sm.homeautomation.utils.SessionHandler;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -29,6 +34,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.TextView;
 
 import java.util.Timer;
 
@@ -43,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private Intent mqttServiceIntent;
     private boolean mServiceBound;
     private MqttManagerService mBoundService;
+    private TextView navUsername;
+    private TextView navEmailId;
+    private SessionHandler sessionHandler;
 
 
     @Override
@@ -66,10 +75,24 @@ public class MainActivity extends AppCompatActivity {
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+
+        navUsername = navigationView.getHeaderView(0).findViewById(R.id.nav_username);
+        navEmailId = navigationView.getHeaderView(0).findViewById(R.id.nav_emailid);
+
+        sessionHandler = new SessionHandler(this);
+
+        User user = sessionHandler.getUserDetails();
+        if(navUsername!=null) {
+            Timber.i("navUsername not null");
+            navUsername.setText(user.getUsername());
+            navEmailId.setText(user.getEmail());
+        }
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
+                R.id.nav_dashboard, R.id.nav_gallery, R.id.nav_slideshow,
                 R.id.nav_tools, R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
@@ -106,6 +129,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                doLogout();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void doLogout() {
+        sessionHandler.logoutUser();
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

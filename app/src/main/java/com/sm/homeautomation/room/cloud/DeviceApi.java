@@ -10,6 +10,8 @@ import com.sm.homeautomation.room.utils.ApiResponse;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
@@ -33,8 +35,10 @@ public interface DeviceApi {
     LiveData<ApiResponse<DeviceResponse>> getCloseHotspot();
 
 
-    @POST("/login.php")
-    LiveData<ApiResponse<LoginResponse>> login(@QueryMap Map<String, String> options);
+    @FormUrlEncoded
+    @POST("/mlogin.php")
+    LiveData<ApiResponse<LoginResponse>> login(@FieldMap Map<String, String> options);
+
 
     @GET("/getDevices.php")
     LiveData<ApiResponse<List<DbaseDevice>>> getDbaseDevices();

@@ -78,7 +78,7 @@ public class SessionHandler {
         if(username.equals("")){
             return false;
         }
-        return false;
+        return true;
     }
 
     /**

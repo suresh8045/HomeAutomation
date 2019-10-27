@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Inject
     ViewModelFactory providerFactory;
-    @Inject
+//    @Inject
     SessionHandler sessionHandler;
     private LoginViewModel loginViewModel;
 
@@ -53,8 +53,10 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = ViewModelProviders.of(this, providerFactory)
                 .get(LoginViewModel.class);
 
+        sessionHandler = new SessionHandler(this);
         if(sessionHandler.isLoggedIn()){
             loadDashboard();
+            finish();
         }
 
         final EditText usernameEditText = findViewById(R.id.username);
@@ -87,20 +89,23 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.GONE);
 
                 if (loginResult.getError()==0) {
-                    loadDashboard();
+
+                    sessionHandler.loginUser(loginResult.getData().getUsername(),"example@gmail.com");
+                        loadDashboard();
 
                 }else{
                     showLoginFailed(loginResult.getMessage());
+                    return;
                 }
 
                /* if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
                 }
 */
-            //    setResult(Activity.RESULT_OK);
+                setResult(Activity.RESULT_OK);
 
                 //Complete and destroy login activity once successful
-             //   finish();
+                finish();
             }
         });
 
@@ -146,6 +151,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loadDashboard() {
+
         Intent i=new Intent(LoginActivity.this,
                 MainActivity.class);
         //Intent is used to switch from one activity to another.

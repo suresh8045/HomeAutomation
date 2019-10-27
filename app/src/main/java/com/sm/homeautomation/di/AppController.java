@@ -41,7 +41,7 @@ public class AppController extends Application implements HasAndroidInjector {
         DaggerAppComponent
                 .builder()
                 .application(this)
-                .contextModule(new ContextModule(getApplicationContext()))
+//                .contextModule(new ContextModule(getApplicationContext()))
                 .build()
                 .injectApplication(this);
                 //.create()

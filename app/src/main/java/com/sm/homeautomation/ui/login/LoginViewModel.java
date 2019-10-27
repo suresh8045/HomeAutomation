@@ -27,7 +27,7 @@ import timber.log.Timber;
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResponse> loginResult = new MutableLiveData<>();
+    private MediatorLiveData<LoginResponse> loginResult = new MediatorLiveData<>();
     private LoginRepository loginRepository;
     private LiveData<Resource<LoginResponse>> ld;
 
@@ -50,14 +50,17 @@ public class LoginViewModel extends ViewModel {
         Map<String,String> requestMap = new HashMap<>();
         requestMap.put("username", username);
         requestMap.put("password", password);
+
         ld = loginRepository.login(requestMap);
 
-        new MediatorLiveData<>().addSource(ld, new Observer<Resource<LoginResponse>>() {
+        loginResult.addSource(ld, new Observer<Resource<LoginResponse>>() {
             @Override
             public void onChanged(Resource<LoginResponse> deviceResponseResource) {
                 Timber.i("onChanged:");
+                loginResult.setValue(deviceResponseResource.data);
             }
         });
+
 
 
      /*   Result<LoggedInUser> result = loginRepository.login(username, password);

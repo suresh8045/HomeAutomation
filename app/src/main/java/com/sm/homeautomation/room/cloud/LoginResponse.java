@@ -1,9 +1,11 @@
 package com.sm.homeautomation.room.cloud;
 
+import com.sm.homeautomation.data.model.User;
+
 public class LoginResponse {
     private int error;
     private String message;
-    private String data;
+    private User data;
 
     public int getError() {
         return error;
@@ -21,11 +23,11 @@ public class LoginResponse {
         this.message = message;
     }
 
-    public String getData() {
+    public User getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(User data) {
         this.data = data;
     }
 }

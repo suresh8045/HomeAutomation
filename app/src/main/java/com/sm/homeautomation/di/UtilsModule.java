@@ -14,8 +14,8 @@ import dagger.Provides;
 @Module
 public abstract class UtilsModule {
 
-    @Provides
+    /*@Provides
     SessionHandler bindSessionHandler(@NonNull Application mApplication){
         return new SessionHandler(Application)
-    }
+    }*/
 }
