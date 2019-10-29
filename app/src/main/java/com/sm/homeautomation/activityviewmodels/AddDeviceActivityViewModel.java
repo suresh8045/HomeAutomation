@@ -26,6 +26,15 @@ public class AddDeviceActivityViewModel extends ViewModel {
         return smRepository.getDeviceInfo();
     }
 
+    public LiveData<Resource<DeviceResponse>> getConnectStatus(){
+        return smRepository.getConnectStatus();
+    }
+
+    public LiveData<Resource<DeviceResponse>> closeDeviceHotspot(){
+        return smRepository.closeDeviceHotspot();
+    }
+
+
 
     public LiveData<Resource<DeviceResponse>> configure(Map<String,String> requestMap){
         return smRepository.deviceConfigure(requestMap);

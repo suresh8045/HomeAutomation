@@ -1,5 +1,6 @@
 package com.sm.homeautomation;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.util.HashMap;
@@ -53,6 +55,12 @@ public class AddDeviceActivity extends AppCompatActivity {
     @Inject
     ViewModelFactory providerFactory;
     private AddDeviceActivityViewModel addDeviceActivityViewModel;
+    private TextView devId;
+    private TextView devModel;
+    private TextView devType;
+    private TextView ssidInput;
+    private TextView passwordWifi;
+    private ProgressBar deviceConfiguringProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +76,16 @@ public class AddDeviceActivity extends AppCompatActivity {
         vf = findViewById( R.id.viewFlipper);
         connectedSSID = findViewById(R.id.ssid_name);
         openWifiSettingsBtn = findViewById(R.id.open_wifi_settings);
+
+        devId = findViewById(R.id.dev_id_v);
+        devType = findViewById(R.id.dev_type_v);
+        devModel = findViewById(R.id.dev_model_v);
+        ssidInput = findViewById(R.id.ssid_v);
+        passwordWifi = findViewById(R.id.password_v);
+
+        deviceConfiguringProgressBar = findViewById(R.id.progressBar_connection);
+        deviceConfiguringProgressBar.setVisibility(View.INVISIBLE);
+
         openWifiSettingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,6 +103,7 @@ public class AddDeviceActivity extends AppCompatActivity {
                 vf.setOutAnimation(AddDeviceActivity.this, R.anim.out_to_left);
                 vf.showNext();
                 addDeviceActivityViewModel.setFlipperPosition(vf.getDisplayedChild());
+                callGetInfo();
             }
         });
 
@@ -105,13 +124,14 @@ public class AddDeviceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Timber.i("onClick");
-                vf.setInAnimation(AddDeviceActivity.this, R.anim.in_from_right);
-                vf.setOutAnimation(AddDeviceActivity.this, R.anim.out_to_left);
-                vf.showNext();
-                addDeviceActivityViewModel.setFlipperPosition(vf.getDisplayedChild());
-                callGetInfo();
-                //callApi();
-//                configure();
+                if(configure()) {
+                    vf.setInAnimation(AddDeviceActivity.this, R.anim.in_from_right);
+                    vf.setOutAnimation(AddDeviceActivity.this, R.anim.out_to_left);
+                    vf.showNext();
+                    addDeviceActivityViewModel.setFlipperPosition(vf.getDisplayedChild());
+                    deviceConfiguringProgressBar.setVisibility(View.VISIBLE);
+                }
+
             }
         });
 
@@ -174,10 +194,26 @@ public class AddDeviceActivity extends AppCompatActivity {
         unregisterReceiver(broadcastReceiver);
     }
 
-    private void configure() {
+    private void setActivityResult(String result){
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result",result);
+        setResult(Activity.RESULT_OK,returnIntent);
+        finish();
+    }
+
+
+    private boolean configure() {
+        String ssid = ssidInput.getText().toString();
+        String passwd = passwordWifi.getText().toString();
+        if(ssid.equals("")
+                ||passwd.equals("")){
+            Toast.makeText(this, "Please provide ssid password", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         Map<String, String> data = new HashMap<>();
-        data.put("ssid", "incredible_suresh");
-        data.put("pwd", "xperia80555");
+        data.put("ssid", ssid);
+        data.put("pwd", passwd);
         data.put("ipmode", "0");
 
         addDeviceActivityViewModel.configure(data).removeObservers(this);
@@ -187,6 +223,47 @@ public class AddDeviceActivity extends AppCompatActivity {
                 if(deviceResponseResource!=null && deviceResponseResource.status == Resource.Status.SUCCESS){
                     Timber.i("getInfo: %s"
                             ,deviceResponseResource.data.toString());
+                    callGetConnectStatus();
+                }
+            }
+        });
+        return true;
+    }
+
+    private void callGetConnectStatus(){
+        addDeviceActivityViewModel.getConnectStatus().removeObservers(this);
+        Timber.i("callGetConnectStatus: ");
+        addDeviceActivityViewModel.getConnectStatus().observe(this, new Observer<Resource<DeviceResponse>>() {
+            @Override
+            public void onChanged(Resource<DeviceResponse> deviceResponseResource) {
+                if(deviceResponseResource!=null && deviceResponseResource.status == Resource.Status.SUCCESS){
+                    Timber.i("getConnectStatus: %s"
+                            ,deviceResponseResource.data.toString());
+                    if(deviceResponseResource.data!=null && deviceResponseResource.data.getMsg().equals("connected")){
+                        closeDeviceHotspot();
+                    }else{
+                        callGetConnectStatus();
+                    }
+
+                }
+            }
+        });
+    }
+
+    private void closeDeviceHotspot(){
+        addDeviceActivityViewModel.closeDeviceHotspot().removeObservers(this);
+        Timber.i("callGetConnectStatus: ");
+        addDeviceActivityViewModel.closeDeviceHotspot().observe(this, new Observer<Resource<DeviceResponse>>() {
+            @Override
+            public void onChanged(Resource<DeviceResponse> deviceResponseResource) {
+                if(deviceResponseResource!=null && deviceResponseResource.status == Resource.Status.SUCCESS){
+                    Timber.i("getConnectStatus: %s"
+                            ,deviceResponseResource.data.toString());
+                    if(deviceResponseResource.data!=null && deviceResponseResource.data.getMsg().equals("CONFIG_SUCCESS_SOFTAP_CLOSING")){
+                        deviceConfiguringProgressBar.setVisibility(View.INVISIBLE);
+                        setActivityResult("device configured success");
+                    }
+
                 }
             }
         });
@@ -201,8 +278,9 @@ public class AddDeviceActivity extends AppCompatActivity {
                 if(deviceResponseResource!=null && deviceResponseResource.status == Resource.Status.SUCCESS){
                     Timber.i("getInfo: %s"
                     ,deviceResponseResource.data.toString());
-
-                    configure();
+                    devId.setText(deviceResponseResource.data.getResp().getId());
+                    devType.setText(deviceResponseResource.data.getResp().getType());
+                    devModel.setText(deviceResponseResource.data.getResp().getMdl());
                 }
             }
         });

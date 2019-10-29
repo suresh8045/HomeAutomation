@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 
 import com.sm.homeautomation.room.model.DbaseDevice;
 import com.sm.homeautomation.room.model.DeviceResponse;
+import com.sm.homeautomation.room.model.MainResponse;
 import com.sm.homeautomation.room.model.PendingAddDevice;
 import com.sm.homeautomation.room.utils.ApiResponse;
 
@@ -32,13 +33,16 @@ public interface DeviceApi {
     LiveData<ApiResponse<DeviceResponse>> getConnectStatus();
 
     @GET("http://192.168.4.1/allowSoftAPClose")
-    LiveData<ApiResponse<DeviceResponse>> getCloseHotspot();
+    LiveData<ApiResponse<DeviceResponse>> closeDeviceHotspot();
 
 
     @FormUrlEncoded
     @POST("/mlogin.php")
     LiveData<ApiResponse<LoginResponse>> login(@FieldMap Map<String, String> options);
 
+    @FormUrlEncoded
+    @POST("/addDevice.php")
+    LiveData<ApiResponse<MainResponse>> addDevice(@FieldMap Map<String, String> options);
 
     @GET("/getDevices.php")
     LiveData<ApiResponse<List<DbaseDevice>>> getDbaseDevices();

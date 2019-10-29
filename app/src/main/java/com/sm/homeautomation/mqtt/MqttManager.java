@@ -50,7 +50,7 @@ public class MqttManager implements MqttCallbackExtended {
         mqttConnectOptions.setPassword(password.toCharArray());
 
         try {
-            //addToHistory("Connecting to " + serverUri);
+            addToHistory("Connecting to " + serverUri);
             mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {

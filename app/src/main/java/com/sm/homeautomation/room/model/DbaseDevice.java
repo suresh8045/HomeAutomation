@@ -3,12 +3,13 @@ package com.sm.homeautomation.room.model;
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.sm.homeautomation.room.database.Converters;
 
-@Entity(tableName = "devices")
+@Entity(tableName = "devices", indices = {@Index(value= "dev_id", unique = true)})
 @TypeConverters({Converters.class})
 public class DbaseDevice {
     @NonNull

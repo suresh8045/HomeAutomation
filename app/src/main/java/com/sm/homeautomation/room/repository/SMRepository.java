@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.sm.homeautomation.room.cloud.DeviceApi;
 import com.sm.homeautomation.room.database.DevicesDao;
 import com.sm.homeautomation.room.model.DbaseDevice;
-import com.sm.homeautomation.room.model.PendingAddDevice;
+import com.sm.homeautomation.room.model.MainResponse;
 import com.sm.homeautomation.room.model.DeviceResponse;
 import com.sm.homeautomation.room.utils.ApiResponse;
 import com.sm.homeautomation.room.utils.AppExecutors;
@@ -45,6 +45,10 @@ public class SMRepository {
             @Override
             public void saveCallResult(@NonNull DeviceResponse item) {
                 Timber.i("saveCallResult");
+                if(item.getResp() != null) {
+                    item.getResp().setConfigured(false);
+                    devicesDao.insertPendingAddDevice(item.getResp());
+                }
             }
 
             @NonNull
@@ -65,6 +69,7 @@ public class SMRepository {
             @Override
             public void saveCallResult(@NonNull DeviceResponse item) {
                 Timber.i("saveCallResult");
+
             }
 
             @NonNull
@@ -98,6 +103,29 @@ public class SMRepository {
         }.getAsLiveData();
     }
 
+    public LiveData<Resource<DeviceResponse>> closeDeviceHotspot(){
+        return new NetworkBoundDirectResource<DeviceResponse>(appExecutors){
+            @Override
+            public void saveCallResult(@NonNull DeviceResponse item) {
+                Timber.i("saveCallResult");
+                if(item.getResp() != null) {
+                    item.getResp().setConfigured(true);
+                    devicesDao.updatePendingAddDevice(item.getResp());
+                }
+            }
+
+            @NonNull
+            @Override
+            public LiveData<ApiResponse<DeviceResponse>> createCall() {
+                Timber.i("createCall");
+                if(deviceApi!=null){
+                    Timber.i("deviceapi not null");
+                }
+                return deviceApi.closeDeviceHotspot();
+            }
+        }.getAsLiveData();
+    }
+
     public LiveData<Resource<List<DbaseDevice>>> getDevices(){
         return new NetworkBoundResource<List<DbaseDevice>, List<DbaseDevice>>(appExecutors){
 
@@ -123,6 +151,7 @@ public class SMRepository {
             @NonNull
             @Override
             protected LiveData<List<DbaseDevice>> loadFromDb() {
+                Timber.i("loadFromDb");
                 return devicesDao.getAllDevices();
             }
 
@@ -130,6 +159,25 @@ public class SMRepository {
             @Override
             protected LiveData<ApiResponse<List<DbaseDevice>>> createCall() {
                 return deviceApi.getDbaseDevices();
+            }
+        }.getAsLiveData();
+    }
+
+    public LiveData<Resource<MainResponse>> addDevice(final Map<String,String> requestMap){
+        return new NetworkBoundDirectResource<MainResponse>(appExecutors){
+            @Override
+            public void saveCallResult(@NonNull MainResponse item) {
+                Timber.i("saveCallResult");
+            }
+
+            @NonNull
+            @Override
+            public LiveData<ApiResponse<MainResponse>> createCall() {
+                Timber.i("createCall");
+                if(deviceApi!=null){
+                    Timber.i("deviceapi not null");
+                }
+                return deviceApi.addDevice(requestMap);
             }
         }.getAsLiveData();
     }

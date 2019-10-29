@@ -38,6 +38,7 @@ public class HomeFragment extends Fragment implements DevicesAdapter.OnDevicesAd
 
     @Inject
     ViewModelFactory providerFactory;
+    private DevicesAdapter devicesAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +59,8 @@ public class HomeFragment extends Fragment implements DevicesAdapter.OnDevicesAd
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(getActivity());
         deviceRecyclerView.setLayoutManager(layoutManager);
+        devicesAdapter = new DevicesAdapter(this);
+        deviceRecyclerView.setAdapter(devicesAdapter);
 
         initObservers();
         return root;
@@ -82,9 +85,7 @@ public class HomeFragment extends Fragment implements DevicesAdapter.OnDevicesAd
     }
 
     public void initDeviceAdapter(List<DbaseDevice> dbaseDevices){
-        DevicesAdapter devicesAdapter = new DevicesAdapter(this);
-        devicesAdapter.setDevices(dbaseDevices);
-        deviceRecyclerView.setAdapter(devicesAdapter);
+        devicesAdapter.submitList(dbaseDevices);
     }
 
     @Override

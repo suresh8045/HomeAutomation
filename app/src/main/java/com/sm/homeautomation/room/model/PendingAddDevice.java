@@ -5,12 +5,13 @@ package com.sm.homeautomation.room.model;
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.sm.homeautomation.room.database.Converters;
 
-@Entity(tableName = "pending_devices")
+@Entity(tableName = "pending_devices", indices = {@Index(value = "id",unique = true)})
 @TypeConverters({Converters.class})
 public class PendingAddDevice {
 
@@ -23,6 +24,7 @@ public class PendingAddDevice {
     private String mdl;
     private String hw_v;
     private String fw_v;
+    private boolean isConfigured;
     @Embedded
     private DeviceState state;
 
@@ -80,6 +82,14 @@ public class PendingAddDevice {
 
     public void setFw_v(String fw_v) {
         this.fw_v = fw_v;
+    }
+
+    public boolean isConfigured() {
+        return isConfigured;
+    }
+
+    public void setConfigured(boolean configured) {
+        isConfigured = configured;
     }
 
     public DeviceState getState() {

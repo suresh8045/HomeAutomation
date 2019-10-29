@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == ADD_DEVICE_REQUEST) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                Timber.i("Result OK");
+                Timber.i("Result OK, %s",data.getStringExtra("result"));
                 // The user picked a contact.
                 // The Intent's data Uri identifies which contact was selected.
 
